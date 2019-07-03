@@ -1,0 +1,28 @@
+.avatar {
+  width: 100%;
+  text-align: center;
+  background-color: transparent;
+}
+
+.avatar-container {
+  width: 100px;
+  height: 100px;
+  line-height: 40px;
+  border-radius: 50px;
+  /* padding: 10px 0; */
+  margin: 10px auto;
+  background: url('../../images/avatar.jpg') center center no-repeat;
+  background-size: 100px 100px;
+}
+
+.avatar-container img {
+  width: 100%;
+  height: 100%;
+  vertical-align: middle;
+}
+
+.avatar .nickname {
+  height: 20px;
+  line-height: 20px;
+  color: #fff;
+}
