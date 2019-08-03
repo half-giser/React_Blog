@@ -2,16 +2,11 @@ import {Editor} from 'slate-react';
 import {Value} from 'slate';
 
 import React, {Component} from 'react';
-// import {isHotKey} from 'is-hotkey';
-import { Button, ToolBar} from './basicComponents';
+import Button from './basicButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBold, faItalic,faUnderline,faListUl,faListOl,faCode,faAlignCenter,faAlignJustify,faAlignRight, faAlignLeft,faQuoteLeft} from '@fortawesome/free-solid-svg-icons';
 
 const DEFAULT_TYPE = "paragraph";
-// const isBoldHotKey = isHotKey('ctrl+b');
-// const isItalicHotKey = isHotKey('ctrl+i');
-// const isUnderLineHotKey = isHotKey('ctrl+u');
-// const isCodeHotKey = isHotKey('ctrl+`');
 
 const initialValue = Value.fromJSON({
   document: {
@@ -29,6 +24,36 @@ const initialValue = Value.fromJSON({
     ]
   }
 });
+
+function markHotKey (options) {
+  const { type, key } = options;
+
+  return {
+    onKeyDown : (event, editor, next) => {
+      if (event.key !== key || !event.ctrlKey) return next();
+      event.preventDefault();
+      editor.toggleMark(type);
+    }
+  }
+}
+
+function blockHotKey(options) {
+  const { type, key } = options;
+
+  return {
+    onKeyDown : (event, editor, next) => {
+      if (event.key !== key || !event.ctrlKey)  return next();
+      const isCode = editor.value.blocks.some(block => block.type === type);
+      editor.setBlocks(isCode ? 'paragraph' : 'code');
+    }
+  }
+}
+
+const plugins = [
+  markHotKey({ key:'b', type: 'bold' } ),
+  markHotKey({ key:'i', type: 'italic' } ),
+  blockHotKey({ key: '`', type: 'code' } )
+];
 
 class TextEditor extends Component {
   state = {
@@ -51,12 +76,12 @@ class TextEditor extends Component {
 
   onChange = ({value}) => { this.setState({value}) }
 
-  onClickMark = (event,type) => {
+  onClickMark = (event, type) => {
     event.preventDefault();
     this.editor.toggleMark(type);
   }
 
-  onClickBlock = (event,type) => {
+  onClickBlock = (event, type) => {
     event.preventDefault();
 
     const { editor } = this;
@@ -100,7 +125,7 @@ class TextEditor extends Component {
     }
   }
 
-  renderMarkButton = (type,icon_singnal) => {
+  renderMarkButton = (type, icon_singnal) => {
     const isActive = this.hasMark(type);
     let cur_icon;
 
@@ -138,22 +163,22 @@ class TextEditor extends Component {
     }
 
     return (
-      <Button 
+      <Button
         activeState = {isActive}
-        onMouseDown = {event => this.onClickMark(event,type)}
+        onMouseDown = {event => this.onClickMark(event, type)}
       >
         <FontAwesomeIcon icon={ cur_icon } />
       </Button>
     )
   }
 
-  renderBlockButton = (type,icon_singnal) => {
+  renderBlockButton = (type, icon_singnal) => {
     let isActive  = this.hasBlock(type);
     let cur_icon;
 
     if (['numbered-list','bulleted-list'].includes(type)) {
       const { value: { document,blocks }} = this.state;
-      
+
       if ( blocks.size > 0 ) {
         const parent = document.getParent(blocks.first().key)
         isActive = this.hasBlock("list-item") && parent && parent.type === type;
@@ -182,12 +207,12 @@ class TextEditor extends Component {
     )
   }
 
-  renderMark = (props,editor,next) => {
+  renderMark = (props, editor, next) => {
     const { children,mark,attributes } = props;
 
     switch(mark.type) {
       case 'bold':
-        return <strong {...attributes}>{children} </strong> 
+        return <strong {...attributes}>{children} </strong>
       case 'code':
         return <code {...attributes}>{children}</code>
       case 'italic':
@@ -199,7 +224,7 @@ class TextEditor extends Component {
     }
   }
 
-  renderBlock = (props,editor,next) => {
+  renderBlock = (props, editor, next) => {
     const {children,node,attributes} = props;
 
     switch(node.type) {
@@ -209,15 +234,17 @@ class TextEditor extends Component {
         return <ul {...attributes}>{children}</ul>
       case 'numbered-list':
         return <ol {...attributes}>{children}</ol>
+      case 'code':
+        return <pre {...attributes}><code>{children}</code></pre>
       default:
-        return next()
-    }
+        return next();
   }
+}
 
   render() {
     return (
       <div className="textEditor">
-        <ToolBar
+        {/* <ToolBar
           className="generateTools"
         >
         { this.renderMarkButton("bold","format_bold") }
@@ -228,15 +255,16 @@ class TextEditor extends Component {
         { this.renderBlockButton("block-quote","format_quote") }
         { this.renderBlockButton('numbered-list', 'format_list_numbered') }
         { this.renderBlockButton('bulleted-list', 'format_list_bulleted') }
-        </ToolBar>
-        <Editor 
+        </ToolBar> */}
+        <Editor
           spellCheck
           autoFocus
           ref={ this.ref }
+          plugins={plugins}
           value={ this.state.value }
-          onChange = { this.onChange} 
+          onChange = { this.onChange}
           renderBlock={ this.renderBlock }
-          renderMark={ this.renderMark }
+          renderMark = {this.renderMark}
         />
       </div>
     )

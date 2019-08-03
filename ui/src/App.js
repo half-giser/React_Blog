@@ -10,6 +10,7 @@ import LinkList from './components/linkList/index';
 import Avatar from './components/avatar/index';
 import SearchBar from './components/searchBar/index';
 import {TextEditor} from './components/textEditor';
+// import FancyButton from './components/reusable';
 
 import './App.css';
 
