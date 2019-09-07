@@ -1,8 +1,9 @@
-import {Editor} from 'slate-react';
-import {Value} from 'slate';
+import { Editor } from 'slate-react';
+import { Value } from 'slate';
 
 import React, {Component} from 'react';
 import Button from './basicButton';
+import ToolBar from './basicToolBar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBold, faItalic,faUnderline,faListUl,faListOl,faCode,faAlignCenter,faAlignJustify,faAlignRight, faAlignLeft,faQuoteLeft} from '@fortawesome/free-solid-svg-icons';
 
@@ -186,13 +187,13 @@ class TextEditor extends Component {
     }
 
     switch(icon_singnal) {
-      case "numbered-list":
+      case "format_list_numbered":
         cur_icon = faListOl;
         break;
-      case "bulleted-list":
+      case "format_list_bulleted":
         cur_icon = faListUl;
         break;
-      case "block-quote":
+      case "format_quote":
         cur_icon = faQuoteLeft;
         break;
     }
@@ -200,7 +201,7 @@ class TextEditor extends Component {
     return (
       <Button
         activeState = { isActive }
-        onMouseDown = { event => this.onClickBlock(event,type) }
+        onMouseDown = { event => this.onClickBlock(event, type) }
       >
         <FontAwesomeIcon icon={ cur_icon } />
       </Button>
@@ -244,19 +245,19 @@ class TextEditor extends Component {
   render() {
     return (
       <div className="textEditor">
-        {/* <ToolBar
+        <ToolBar
           className="generateTools"
         >
         { this.renderMarkButton("bold","format_bold") }
         { this.renderMarkButton("italic","format_italic") }
         { this.renderMarkButton("underlined","format_underline")}
         { this.renderMarkButton("code","format_code")}
-
         { this.renderBlockButton("block-quote","format_quote") }
         { this.renderBlockButton('numbered-list', 'format_list_numbered') }
         { this.renderBlockButton('bulleted-list', 'format_list_bulleted') }
-        </ToolBar> */}
+        </ToolBar>
         <Editor
+          className="textEditorContent"
           spellCheck
           autoFocus
           ref={ this.ref }

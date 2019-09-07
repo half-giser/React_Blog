@@ -6,9 +6,9 @@ class Menu extends Component {
 
   render() {
     return (
-      <div 
-          className = {this.props.className}
-      />
+      <div className = {this.props.className}>
+        {this.props.buttons}
+      </div>
     )
   }
 }
@@ -18,12 +18,13 @@ class ToolBar extends Component {
     super(props);
   }
 
-  render() {  
-    let className, restProps;
-    ({className, ...restProps} = this.props);    //... rest parameter  used for collect elements into an array
+  render() {
+    let className, children;
+    ({className, children} = this.props);    //... rest parameter  used for collect elements into an array
+
     return (
       <Menu
-        { ...restProps }                                        //...spread syntaxc for 'expends' an array inito its elements
+        buttons = {children}                          //...spread syntaxc for 'expends' an array inito its elements
         className = {className}
       />
     )

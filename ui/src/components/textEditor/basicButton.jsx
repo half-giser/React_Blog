@@ -10,9 +10,9 @@ class Button extends Component {
     let curClassName = isActive ? "active" : "";
 
     return (
-      <span 
-          className = {curClassName}
-      />
+      <span className = {curClassName}>
+        {this.props.children}
+      </span>
     )
   }
 }

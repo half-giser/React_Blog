@@ -1,17 +1,24 @@
 .generateTools {
   position: relative;
-  padding: 1px 18px 17px;
+  padding: 0 18px;
   border-bottom: 2px solid #eee;
   margin-bottom: 20px;
+  text-align: left;
 }
 
 .generateTools > * {
   display: inline-block;
   font-size: 18px;
-  width: 50px;
+  width: 1em;
   height: 50px;
+  line-height: 50px;
+  text-align: center;
   vertical-align: text-bottom;
   cursor: pointer;
+  color: #000;
+}
+
+.generateTools > * :hover {
   color: #aaa;
 }
 
